@@ -55,6 +55,7 @@ import android.view.accessibility.AccessibilityManager;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.TextView;
+import android.app.StatusBarManager;
 
 import com.android.launcher3.Launcher.CustomContentCallbacks;
 import com.android.launcher3.Launcher.LauncherOverlay;
@@ -374,8 +375,11 @@ public class Workspace extends PagedView
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2,
                     float velocityX, float velocityY) {
-                if (e1.getY() - e2.getY() > SWIPE_THRESHOLD) {
-                    mLauncher.showAppsView(true, false, false);
+                if (e2.getY() - e1.getY() > SWIPE_THRESHOLD) {
+                    final StatusBarManager mStatusBar =
+                            (StatusBarManager) mContext.getSystemService(
+                            Context.STATUS_BAR_SERVICE);
+                    mStatusBar.expandNotificationsPanel();
                 }
                 return true;
             }
