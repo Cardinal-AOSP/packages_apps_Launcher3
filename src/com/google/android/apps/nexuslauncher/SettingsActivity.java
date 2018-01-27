@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.annotation.SuppressLint;
@@ -23,9 +24,14 @@ import android.os.SystemClock;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.preference.TwoStatePreference;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.android.launcher3.LauncherModel;
 import com.android.launcher3.Utilities;
@@ -35,15 +41,17 @@ import com.android.launcher3.R;
 import com.android.launcher3.dynamicui.WallpaperColorInfo;
 import com.android.launcher3.util.LooperExecutor;
 
+import com.google.android.apps.nexuslauncher.AboutDialog;
+import com.google.android.apps.nexuslauncher.smartspace.SmartspaceController;
+
 public class SettingsActivity extends com.android.launcher3.SettingsActivity implements PreferenceFragment.OnPreferenceStartFragmentCallback {
     public final static String ICON_PACK_PREF = "pref_icon_pack";
     public final static String SHOW_PREDICTIONS_PREF = "pref_show_predictions";
     public final static String ENABLE_MINUS_ONE_PREF = "pref_enable_minus_one";
     public final static String SMARTSPACE_PREF = "pref_smartspace";
-    public final static String APP_VERSION_PREF = "about_app_version";
-    private final static String GOOGLE_APP = "com.google.android.googlequicksearchbox";
     public static final String KEY_SHOW_WEATHER_CLOCK = "pref_show_clock_weather";
 
+    private final static String GOOGLE_APP = "com.google.android.googlequicksearchbox";
     private static final long WAIT_BEFORE_RESTART = 250;
 
     @Override
@@ -66,10 +74,21 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
     }
 
     public static class MySettingsFragment extends com.android.launcher3.SettingsActivity.LauncherSettingsFragment
-            implements Preference.OnPreferenceChangeListener {
-        private CustomIconPreference mIconPackPref;
+            implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
+
         private Context mContext;
+
         private ListPreference mShowClockWeather;
+        private ListPreference mGridColumns;
+        private ListPreference mGridRows;
+        private ListPreference mHotseatIcons;
+
+        private CustomIconPreference mIconPackPref;
+        private SwitchPreference mAppSuggestions;
+        private SwitchPreference mGoogleNowPanel;
+        private SwitchPreference mBottomSearchBar;
+        private SwitchPreference mTopSearchBar;
+        private PreferenceScreen mAtGlanceWidget;
 
         @Override
         public void onCreate(Bundle bundle) {
@@ -77,44 +96,48 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
 
             mContext = getActivity();
 
-            findPreference(SHOW_PREDICTIONS_PREF).setOnPreferenceChangeListener(this);
-            findPreference(ENABLE_MINUS_ONE_PREF).setTitle(getDisplayGoogleTitle());
-
-            PackageManager packageManager = mContext.getPackageManager();
-            try {
-                PackageInfo packageInfo = packageManager.getPackageInfo(mContext.getPackageName(), 0);
-                findPreference(APP_VERSION_PREF).setSummary(packageInfo.versionName);
-            } catch (PackageManager.NameNotFoundException ex) {
-                Log.e("SettingsActivity", "Unable to load my own package info", ex);
-            }
-
-            try {
-                ApplicationInfo applicationInfo = mContext.getPackageManager().getApplicationInfo(GOOGLE_APP, 0);
-                if (!applicationInfo.enabled) {
-                    throw new PackageManager.NameNotFoundException();
-                }
-            } catch (PackageManager.NameNotFoundException ignored) {
-                getPreferenceScreen().removePreference(findPreference(SettingsActivity.ENABLE_MINUS_ONE_PREF));
-
-            findPreference(Utilities.BOTTOM_SEARCH_BAR_KEY).setOnPreferenceChangeListener(this);
-            findPreference(Utilities.TOP_SEARCH_BAR_KEY).setOnPreferenceChangeListener(this);
-
-            findPreference(Utilities.GRID_COLUMNS).setOnPreferenceChangeListener(this);
-            findPreference(Utilities.GRID_ROWS).setOnPreferenceChangeListener(this);
-            findPreference(Utilities.HOTSEAT_ICONS).setOnPreferenceChangeListener(this);
-            }
-
             mIconPackPref = (CustomIconPreference) findPreference(ICON_PACK_PREF);
-            mIconPackPref.setOnPreferenceChangeListener(this);
-
-            findPreference(SHOW_PREDICTIONS_PREF).setOnPreferenceChangeListener(this);
-
+            mAppSuggestions = (SwitchPreference) findPreference(SHOW_PREDICTIONS_PREF);
+            mGoogleNowPanel = (SwitchPreference) findPreference(ENABLE_MINUS_ONE_PREF);
+            mAtGlanceWidget = (PreferenceScreen) findPreference(SMARTSPACE_PREF);
             mShowClockWeather = (ListPreference) findPreference(KEY_SHOW_WEATHER_CLOCK);
 
-            mShowClockWeather.setValue(getDevicePrefs(mContext).getString(KEY_SHOW_WEATHER_CLOCK, "0"));
+            mGridColumns = (ListPreference) findPreference(Utilities.GRID_COLUMNS);
+            mGridRows = (ListPreference) findPreference(Utilities.GRID_ROWS);
+            mHotseatIcons = (ListPreference) findPreference(Utilities.HOTSEAT_ICONS);
+            mBottomSearchBar= (SwitchPreference) findPreference(Utilities.BOTTOM_SEARCH_BAR_KEY);
+            mTopSearchBar = (SwitchPreference) findPreference(Utilities.TOP_SEARCH_BAR_KEY);
 
+            mGoogleNowPanel.setTitle(getDisplayGoogleTitle());
+            if (!isPackageInstalled(GOOGLE_APP, mContext)) {
+                mGoogleNowPanel.setEnabled(false);
+                mGoogleNowPanel.setSelectable(false);
+                mAtGlanceWidget.setEnabled(false);
+                mAtGlanceWidget.setSelectable(false);
+            } else {
+                mGoogleNowPanel.setEnabled(true);
+                mGoogleNowPanel.setSelectable(true);
+                mAtGlanceWidget.setEnabled(true);
+                mAtGlanceWidget.setSelectable(true);
+                mAtGlanceWidget.setOnPreferenceClickListener(this);
+            }
+
+            mIconPackPref.setOnPreferenceChangeListener(this);
+
+            mAppSuggestions.setOnPreferenceChangeListener(this);
+
+            mShowClockWeather.setValue(getDevicePrefs(mContext).getString(KEY_SHOW_WEATHER_CLOCK, "0"));
             mShowClockWeather.setOnPreferenceChangeListener(this);
 
+            mGridColumns.setOnPreferenceChangeListener(this);
+            mGridRows.setOnPreferenceChangeListener(this);
+
+            mHotseatIcons.setOnPreferenceChangeListener(this);
+
+            mBottomSearchBar.setOnPreferenceChangeListener(this);
+            mTopSearchBar.setOnPreferenceChangeListener(this);
+
+            setHasOptionsMenu(true);
         }
 
         private String getDisplayGoogleTitle() {
@@ -134,10 +157,39 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
             return mContext.getString(R.string.title_show_google_app, charSequence);
         }
 
+        private boolean isPackageInstalled(String package_name, Context context) {
+            try {
+                PackageManager pm = context.getPackageManager();
+                pm.getPackageInfo(package_name, PackageManager.GET_ACTIVITIES);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
         @Override
         public void onResume() {
             super.onResume();
             mIconPackPref.reloadIconPacks();
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            menu.add(0, 0, 0, R.string.about_credits)
+                    .setIcon(R.drawable.ic_dialog_alert)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()) {
+                case 0:
+                    final AboutDialog dialog = new AboutDialog();
+                    showAboutDialog(this, dialog);
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         @Override
@@ -199,6 +251,16 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
             }
             return false;
         }
+
+
+     @Override
+     public boolean onPreferenceClick(Preference preference) {
+        if (SMARTSPACE_PREF.equals(preference.getKey())) {
+            SmartspaceController.get(mContext).cZ();
+            return true;
+        }
+        return false;
+       }
     }
 
     public static class SuggestionConfirmationFragment extends DialogFragment implements DialogInterface.OnClickListener {
@@ -248,5 +310,14 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
         });
+    }
+    private static void showAboutDialog(Fragment context, DialogFragment dialog) {
+        FragmentTransaction ft = context.getChildFragmentManager().beginTransaction();
+        Fragment prev = context.getChildFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        dialog.show(ft, "dialog");
     }
 }
