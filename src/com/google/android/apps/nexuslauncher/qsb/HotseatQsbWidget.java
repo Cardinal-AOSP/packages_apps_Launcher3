@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.ActivityManager;
 import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
@@ -14,6 +15,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.UserHandle;
 import android.support.v4.graphics.ColorUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -122,7 +124,7 @@ public class HotseatQsbWidget extends AbstractQsbLayout implements WallpaperColo
             devicePrefs.edit().putInt("key_hotseat_qsb_tap_count", devicePrefs.getInt("key_hotseat_qsb_tap_count", 0) + 1).apply();
             playQsbAnimation();
         } else {
-            getContext().sendOrderedBroadcast(getSearchIntent(), null,
+            getContext().sendOrderedBroadcastAsUser(getSearchIntent(), new UserHandle(ActivityManager.getCurrentUser()), null,
                     new BroadcastReceiver() {
                         @Override
                         public void onReceive(Context context, Intent intent) {
