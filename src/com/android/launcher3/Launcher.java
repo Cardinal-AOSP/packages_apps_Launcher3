@@ -1387,6 +1387,7 @@ public class Launcher extends BaseActivity
      */
     public void setAllAppsButton(View allAppsButton) {
         mAllAppsButton = allAppsButton;
+        mAllAppsButton.setVisibility(showSwipeUpIndicator() ? View.VISIBLE : View.INVISIBLE);
     }
 
     public View getStartViewForAllAppsRevealAnimation() {
@@ -4053,6 +4054,10 @@ public class Launcher extends BaseActivity
         return ((Launcher) ((ContextWrapper) context).getBaseContext());
     }
 
+    public boolean showSwipeUpIndicator() {
+        return Utilities.showSwipeUpIndicator(getApplicationContext());
+    }
+
     private class RotationPrefChangeHandler implements OnSharedPreferenceChangeListener {
 
         @Override
@@ -4061,6 +4066,9 @@ public class Launcher extends BaseActivity
             if (Utilities.ALLOW_ROTATION_PREFERENCE_KEY.equals(key)) {
                 // Recreate the activity so that it initializes the rotation preference again.
                 recreate();
+            }
+            if (Utilities.KEY_SHOW_SWIPEUP_ARROW.equals(key)) {
+                mAllAppsButton.setVisibility(showSwipeUpIndicator() ? View.VISIBLE : View.INVISIBLE);
             }
         }
     }

@@ -82,6 +82,11 @@
         android:defaultValue=""
         android:persistent="true" />
 
+   <SwitchPreference
+        android:key="pref_show_swipeup_arrow"
+        android:title="@string/show_swipeup_arrow"
+        android:summary="@string/show_swipeup_arrow_summary"
+
     <PreferenceScreen
         android:key="about_screen"
         android:title="@string/about"

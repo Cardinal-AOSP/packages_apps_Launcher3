@@ -342,4 +342,6 @@
     <string name="hide_app_sum">Hide app from the app drawer</string>
     <string name="hide_app">Hide app</string>
     <string name="icon_shape_rounded_square">Rounded square</string>
+    <string name="show_swipeup_arrow">Enable swipe up indicator</string>
+    <string name="show_swipeup_arrow_summary">Show the swipe up arrow indicator on top of the dock</string>
 </resources>
