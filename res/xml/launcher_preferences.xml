@@ -87,6 +87,15 @@
         android:title="@string/show_swipeup_arrow"
         android:summary="@string/show_swipeup_arrow_summary"
 
+   <ListPreference
+        android:key="pref_show_clock_weather"
+        android:title="@string/pref_show_clock_weather"
+        android:summary="%s"
+        android:entries="@array/pref_show_clock_weather_names"
+        android:entryValues="@array/pref_show_clock_weather_values"
+        android:defaultValue=""
+        android:persistent="false" />
+
     <PreferenceScreen
         android:key="about_screen"
         android:title="@string/about"

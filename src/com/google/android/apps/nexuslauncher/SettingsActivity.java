@@ -1,5 +1,7 @@
 package com.google.android.apps.nexuslauncher;
 
+import static com.android.launcher3.Utilities.getDevicePrefs;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -13,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.TwoStatePreference;
@@ -28,6 +31,7 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
     public final static String SMARTSPACE_PREF = "pref_smartspace";
     public final static String APP_VERSION_PREF = "about_app_version";
     private final static String GOOGLE_APP = "com.google.android.googlequicksearchbox";
+    public static final String KEY_SHOW_WEATHER_CLOCK = "pref_show_clock_weather";
 
     @Override
     protected void onCreate(final Bundle bundle) {
@@ -52,6 +56,7 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
             implements Preference.OnPreferenceChangeListener {
         private CustomIconPreference mIconPackPref;
         private Context mContext;
+        private ListPreference mShowClockWeather;
 
         @Override
         public void onCreate(Bundle bundle) {
@@ -83,6 +88,13 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
             mIconPackPref.setOnPreferenceChangeListener(this);
 
             findPreference(SHOW_PREDICTIONS_PREF).setOnPreferenceChangeListener(this);
+
+            mShowClockWeather = (ListPreference) findPreference(KEY_SHOW_WEATHER_CLOCK);
+
+            mShowClockWeather.setValue(getDevicePrefs(mContext).getString(KEY_SHOW_WEATHER_CLOCK, "0"));
+
+            mShowClockWeather.setOnPreferenceChangeListener(this);
+
         }
 
         private String getDisplayGoogleTitle() {
@@ -137,6 +149,11 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                     SettingsActivity.SuggestionConfirmationFragment confirmationFragment = new SettingsActivity.SuggestionConfirmationFragment();
                     confirmationFragment.setTargetFragment(this, 0);
                     confirmationFragment.show(getFragmentManager(), preference.getKey());
+                    break;
+                case KEY_SHOW_WEATHER_CLOCK:
+                    String value = (String) newValue;
+                    getDevicePrefs(mContext).edit().putString(KEY_SHOW_WEATHER_CLOCK, value).commit();
+                    mShowClockWeather.setValue(value);
                     break;
             }
             return false;
