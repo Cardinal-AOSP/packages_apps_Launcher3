@@ -342,7 +342,9 @@
     <string name="hide_app_sum">Hide app from the app drawer</string>
     <string name="hide_app">Hide app</string>
     <string name="icon_shape_rounded_square">Rounded square</string>
-    <string name="show_swipeup_arrow">Enable swipe up indicator</string>
+
+    <!-- Swipe up indicator -->
+    <string name="show_swipeup_arrow">Swipe up indicator</string>
     <string name="show_swipeup_arrow_summary">Show the swipe up arrow indicator on top of the dock</string>
 
     <string name="pref_show_clock_weather">Home screen date and weather</string>
@@ -350,4 +352,11 @@
     <string name="pref_show_clock_weather_nothing">Don\'t show</string>
     <string name="pref_show_clock_weather_clock_only">Show date only</string>
     <string name="pref_show_clock_weather_weather_only">Show weather only</string>
+
+    <!-- Hide/Show search bars -->
+    <string name="bottom_search_bar_title">Bottom search bar</string>
+    <string name="bottom_search_bar_summary">Show the bottom search bar at the bottom of the dock</string>
+    <string name="top_search_bar_title">Top search bar</string>
+    <string name="top_search_bar_summary">Show the bottom search at the top of the app drawer</string>
+
 </resources>

@@ -127,6 +127,12 @@ public final class Utilities {
 
     public static final String ALLOW_ROTATION_PREFERENCE_KEY = "pref_allowRotation";
 
+    public static final String BOTTOM_SEARCH_BAR_KEY = "pref_bottom_search_bar";
+    public static final String TOP_SEARCH_BAR_KEY = "pref_top_search_bar";
+
+    private static final boolean BOTTOM_SEARCH_BAR_DEFAULT = true;
+    private static final boolean TOP_SEARCH_BAR_DEFAULT = true;
+
     public static final String KEY_SHOW_SWIPEUP_ARROW = "pref_show_swipeup_arrow";
 
     public static boolean showSwipeUpIndicator(Context context) {
@@ -153,6 +159,14 @@ public final class Utilities {
             return originalSmallestWidth >= 600;
         }
         return false;
+    }
+
+    public static boolean isBottomSearchBarVisible(Context context) {
+        return getPrefs(context).getBoolean(BOTTOM_SEARCH_BAR_KEY, BOTTOM_SEARCH_BAR_DEFAULT);
+    }
+
+    public static boolean isTopSearchBarVisible(Context context) {
+        return getPrefs(context).getBoolean(TOP_SEARCH_BAR_KEY, TOP_SEARCH_BAR_DEFAULT);
     }
 
     /**

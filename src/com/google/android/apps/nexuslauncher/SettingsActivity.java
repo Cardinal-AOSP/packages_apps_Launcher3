@@ -2,19 +2,24 @@ package com.google.android.apps.nexuslauncher;
 
 import static com.android.launcher3.Utilities.getDevicePrefs;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -22,7 +27,13 @@ import android.preference.TwoStatePreference;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.launcher3.LauncherModel;
+import com.android.launcher3.Utilities;
+
 import com.android.launcher3.R;
+
+import com.android.launcher3.dynamicui.WallpaperColorInfo;
+import com.android.launcher3.util.LooperExecutor;
 
 public class SettingsActivity extends com.android.launcher3.SettingsActivity implements PreferenceFragment.OnPreferenceStartFragmentCallback {
     public final static String ICON_PACK_PREF = "pref_icon_pack";
@@ -32,6 +43,8 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
     public final static String APP_VERSION_PREF = "about_app_version";
     private final static String GOOGLE_APP = "com.google.android.googlequicksearchbox";
     public static final String KEY_SHOW_WEATHER_CLOCK = "pref_show_clock_weather";
+
+    private static final long WAIT_BEFORE_RESTART = 250;
 
     @Override
     protected void onCreate(final Bundle bundle) {
@@ -82,6 +95,10 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                 }
             } catch (PackageManager.NameNotFoundException ignored) {
                 getPreferenceScreen().removePreference(findPreference(SettingsActivity.ENABLE_MINUS_ONE_PREF));
+
+            findPreference(Utilities.BOTTOM_SEARCH_BAR_KEY).setOnPreferenceChangeListener(this);
+            findPreference(Utilities.TOP_SEARCH_BAR_KEY).setOnPreferenceChangeListener(this);
+
             }
 
             mIconPackPref = (CustomIconPreference) findPreference(ICON_PACK_PREF);
@@ -155,6 +172,18 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                     getDevicePrefs(mContext).edit().putString(KEY_SHOW_WEATHER_CLOCK, value).commit();
                     mShowClockWeather.setValue(value);
                     break;
+                case Utilities.BOTTOM_SEARCH_BAR_KEY:
+                    if (preference instanceof TwoStatePreference) {
+                        ((TwoStatePreference) preference).setChecked((boolean) newValue);
+                    }
+                    restart(mContext);
+                    break;
+                case Utilities.TOP_SEARCH_BAR_KEY:
+                    if (preference instanceof TwoStatePreference) {
+                        ((TwoStatePreference) preference).setChecked((boolean) newValue);
+                    }
+                    reloadTheme(mContext);
+                    break;
             }
             return false;
         }
@@ -177,5 +206,35 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                     .setNegativeButton(android.R.string.cancel, null)
                     .setPositiveButton(R.string.label_turn_off_suggestions, this).create();
         }
+    }
+
+    public static void reloadTheme(Context context) {
+        WallpaperColorInfo.getInstance(context).notifyChange(true);
+    }
+
+    public static void restart(final Context context) {
+        ProgressDialog.show(context, null, context.getString(R.string.state_loading), true, false);
+        new LooperExecutor(LauncherModel.getWorkerLooper()).execute(new Runnable() {
+            @SuppressLint("ApplySharedPref")
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(WAIT_BEFORE_RESTART);
+                } catch (Exception e) {
+                    Log.e("SettingsActivity", "Error waiting", e);
+                }
+
+                Intent intent = new Intent(Intent.ACTION_MAIN)
+                        .addCategory(Intent.CATEGORY_HOME)
+                        .setPackage(context.getPackageName())
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                alarmManager.setExact(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 50, pendingIntent);
+
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
+        });
     }
 }
