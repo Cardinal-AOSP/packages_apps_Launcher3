@@ -1,17 +1,17 @@
 package com.google.android.libraries.launcherclient;
 
-import android.view.WindowManager.LayoutParams;
+import android.view.WindowManager/*.LayoutParams*/;
+import android.os.Bundle;
 import com.google.android.libraries.launcherclient.ILauncherOverlayCallback;
 
 interface ILauncherOverlay {
-
     oneway void startScroll();
 
     oneway void onScroll(in float progress);
 
     oneway void endScroll();
 
-    oneway void windowAttached(in LayoutParams lp, in ILauncherOverlayCallback cb, in int flags);
+    oneway void windowAttached(in WindowManager.LayoutParams lp, in ILauncherOverlayCallback cb, in int flags);
 
     oneway void windowDetached(in boolean isChangingConfigurations);
 
@@ -38,5 +38,4 @@ interface ILauncherOverlay {
     oneway void setActivityState(in int flags);
 
     boolean startSearch(in byte[] data, in Bundle bundle);
-
 }
