@@ -316,7 +316,7 @@
     <!-- Accessibility confirmation for notification being dismissed. -->
     <string name="notification_dismissed">Notification dismissed</string>
 
-    <string name="icu_abbrev_wday_month_day_no_year">EEEEMMMd</string>
+    <string name="icu_abbrev_wday_month_day_no_year">EEEMMMd</string>
     <string name="smartspace_preferences">Preferences</string>
     <string name="label_search">Search</string>
     <string name="label_voice_search">Voice search</string>
