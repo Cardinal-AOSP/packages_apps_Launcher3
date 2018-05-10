@@ -153,7 +153,8 @@
     <string name="app_drawer_category_title">Меню приложений</string>
     <string name="icon_category_title">Значки приложений</string>
     <string name="widget_category_title">Виджеты</string>
-
+    <string name="other_category_title">Другое</string>
+   
     <!-- About -->
     <string name="about_credits">Благодарности</string>
     <string name="about_amirzaidi_title">Pixel Launcher 3 mod</string>
@@ -198,4 +199,10 @@
     <string name="number_of_hotseat_title">Количество значков в док-баре</string>
 
     <string name="icon_shape_rounded_square">Квадрат с закругленными углами</string>
+    
+    <string name="action_edit">Редактировать</string>
+    
+    <string name="pref_override_icon_shape_dark_bg_title">Темный фон иконок</string>
+    <string name="pref_override_icon_shape_dark_bg_summary">Использовать темный цвет фона для иконок без собственного цвета</string>
+
 </resources>
