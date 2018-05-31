@@ -76,6 +76,10 @@ public class DefaultAppSearchAlgorithm implements SearchAlgorithm {
     }
 
     public static boolean matches(AppInfo info, String query, StringMatcher matcher) {
+        return matches(info, query, matcher, false) || matches(info, query, matcher, true);
+    }
+
+    private static boolean matches(AppInfo info, String query, StringMatcher matcher, boolean normalize) {
         int queryLength = query.length();
 
         String title = info.title.toString();
@@ -85,8 +89,10 @@ public class DefaultAppSearchAlgorithm implements SearchAlgorithm {
             return false;
         }
 
-        title = normalize(title);
-        query = normalize(query);
+        if (normalize) {
+            title = normalize(title);
+            query = normalize(query);
+        }
 
         int lastType;
         int thisType = Character.UNASSIGNED;
