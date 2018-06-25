@@ -19,7 +19,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name" msgid="649227358658669779">"Launcher3"</string>
+    <string name="app_name" msgid="649227358658669779">Lanzador Pixel</string>
     <string name="folder_name" msgid="7371454440695724752"></string>
     <string name="work_folder_name" msgid="3753320833950115786">"Trabajo"</string>
     <string name="activity_not_found" msgid="8071924732094499514">"La aplicación no está instalada."</string>
@@ -142,7 +142,7 @@
     <string name="title_app_suggestions">Mostrar sugerencias de aplicaciones</string>
     <string name="summary_app_suggestions">En la parte superior de la lista Todas las aplicaciones</string>
     <string name="about_app_version">Versión</string>
-    <string name="app_name_pixel_launcher">Pixel Launcher</string>
+    <string name="app_name_pixel_launcher">Lanzador Pixel</string>
     <string name="title_disable_suggestions_prompt">¿Desactivar las sugerencias de aplicaciones?</string>
     <string name="msg_disable_suggestions_prompt">No se mostrarán sugerencias en la parte superior de tu lista de aplicaciones, y los datos de uso utilizados para crearlas se borrarán de forma permanente.</string>
     <string name="label_turn_off_suggestions">DESACTIVAR</string>
@@ -150,8 +150,11 @@
     <!-- Preference categories -->
     <string name="home_category_title">Pantalla de inicio</string>
     <string name="app_drawer_category_title">Caja de aplic.</string>
-    <string name="icon_category_title">Iconos de aplic.</string>
     <string name="widget_category_title">Widgets</string>
+    <string name="icon_category_title">Iconos de aplic.</string>
+    <string name="gestures_category_title">Gestos</string>
+    <string name="other_category_title">Otros</string>
+    <string name="other_category_summary">Configuración misc.</string>
 
     <!-- About -->
     <string name="about_credits">Créditos</string>
@@ -174,7 +177,6 @@
     <string name="show_swipeup_arrow">Indicador deslizar hacia arriba</string>
     <string name="show_swipeup_arrow_summary">Mostrar la flecha sobre el dock indicando deslizar hacia arriba</string>
 
-
     <string name="pref_show_clock_weather">Fecha y clima en pantalla de inicio</string>
     <string name="pref_show_clock_weather_both">Mostrar ambos fecha y clima</string>
     <string name="pref_show_clock_weather_nothing">No\ mostrar</string>
@@ -194,28 +196,10 @@
     <string name="num_six">Seis</string>
     <string name="num_seven">Siete</string>
 
-    <string-array name="grid_names">
-        <item>@string/num_default</item>
-        <item>@string/num_three</item>
-        <item>@string/num_four</item>
-        <item>@string/num_five</item>
-        <item>@string/num_six</item>
-        <item>@string/num_seven</item>
-    </string-array>
-
-    <string-array name="grid_values">
-        <item>defecto</item>
-        <item>tres</item>
-        <item>cuatro</item>
-        <item>cinco</item>
-        <item>seis</item>
-        <item>siete</item>
-    </string-array>
-
     <string name="grid_category_title">Columnas y filas</string>
     <string name="number_of_columns_title">Numero de columnas</string>
     <string name="number_of_rows_title">Numero de filas</string>
-    <string name="number_of_hotseat_title">Iconos frecuentes</string>
+    <string name="number_of_hotseat_title">Iconos del Dock</string>
 
     <string name="icon_shape_rounded_square">Cuadrado redondo</string>
 
@@ -223,4 +207,12 @@
 
     <string name="pref_override_icon_shape_dark_bg_title">Usar aspecto oscuro</string>
     <string name="pref_override_icon_shape_dark_bg_summary">Usa un color de fondo oscuto para los iconos sin su propio color de forma</string>
+    <string name="smartspace_hours_mins">%1$s %2$s</string>
+
+    <!-- Homescreen double tap gesture -->
+    <string name="pref_homescreen_dt_gestures_title">Gesto doble toque</string>
+    <string name="pref_homescreen_dt_gestures_summary">Selecciona la accion al tocar doble vez en la pantalla</string>
+    <string name="pref_homescreen_dt_gestures_none">Ninguna</string>
+    <string name="pref_homescreen_dt_gestures_sleep">Dormir</string>
+    <string name="pref_homescreen_dt_gestures_torch">Linterna</string>
 </resources>
