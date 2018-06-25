@@ -30,17 +30,22 @@ import android.app.WallpaperManager;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.hardware.camera2.CameraManager;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.os.PowerManager;
 import android.os.UserHandle;
+import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Property;
@@ -95,6 +100,8 @@ import com.android.launcher3.widget.PendingAddWidgetInfo;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.android.launcher3.Utilities.getDevicePrefs;
 
 /**
  * The workspace is a wide area with a wallpaper and a finite number of pages.
@@ -319,6 +326,12 @@ public class Workspace extends PagedView
     private AccessibilityDelegate mPagesAccessibilityDelegate;
 
     private GestureDetector mGestureListener;
+    private CameraManager cameraManager;
+
+    // Used to determine camera state
+    private boolean flashLightStatus = false;
+
+    private int mGestureMode;
 
     /**
      * Used to inflate the Workspace from XML.
@@ -359,17 +372,41 @@ public class Workspace extends PagedView
         // Disable multitouch across the workspace/all apps/customize tray
         setMotionEventSplittingEnabled(true);
 
-        final PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        context.enforceCallingOrSelfPermission(
-                    android.Manifest.permission.DEVICE_POWER, null);
+        mGestureMode = Integer.valueOf(getDevicePrefs(getContext()).getString("pref_homescreen_dt_gestures", "1"));
+
         mGestureListener =
                 new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent event) {
-                pm.goToSleep(event.getEventTime());
+                triggerGesture(event);
                 return true;
             }
         });
+    }
+
+    private void triggerGesture(MotionEvent event) {
+        switch(mGestureMode) {
+            case 0:
+                break;
+            case 1:
+                PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
+                pm.goToSleep(event.getEventTime());
+                break;
+            case 2:
+                flashLight();
+                break;
+        }
+    }
+
+    public void setGestures(int mode) {
+        mGestureMode = mode;
+    }
+
+    private void flashLight() {
+        if (getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
+            Torch Torch = new Torch(getContext());
+            Torch.execute();
+        }
     }
 
     @Override
@@ -4208,6 +4245,36 @@ public class Workspace extends PagedView
         @Override
         public void onAnimationEnd(Animator animation) {
             onEndStateTransition();
+        }
+    }
+
+    private class Torch extends AsyncTask {
+
+        Torch(Context ctx) {
+            cameraManager = (CameraManager) ctx.getSystemService(Context.CAMERA_SERVICE);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            if (flashLightStatus) {
+                try {
+                    String cameraId = cameraManager.getCameraIdList()[0];
+                    cameraManager.setTorchMode(cameraId, true);
+                    flashLightStatus = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    String cameraId = cameraManager.getCameraIdList()[0];
+                    cameraManager.setTorchMode(cameraId, false);
+                    flashLightStatus = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
         }
     }
 }

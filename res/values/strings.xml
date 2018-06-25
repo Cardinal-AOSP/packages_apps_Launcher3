@@ -346,7 +346,9 @@
     <string name="app_drawer_category_title">App drawer</string>
     <string name="icon_category_title">App icons</string>
     <string name="widget_category_title">Widgets</string>
-    <string name="other_category_title">Miscellaneous</string>
+    <string name="gestures_category_title">Gestures</string>
+    <string name="other_category_title">Other</string>
+    <string name="other_category_summary">Miscellaneous configurations</string>
 
     <!-- About -->
     <string name="about_credits">Credits</string>
@@ -389,24 +391,6 @@
     <string name="num_six">Six</string>
     <string name="num_seven">Seven</string>
 
-    <string-array name="grid_names">
-        <item>@string/num_default</item>
-        <item>@string/num_three</item>
-        <item>@string/num_four</item>
-        <item>@string/num_five</item>
-        <item>@string/num_six</item>
-        <item>@string/num_seven</item>
-    </string-array>
-
-    <string-array name="grid_values">
-        <item>default</item>
-        <item>three</item>
-        <item>four</item>
-        <item>five</item>
-        <item>six</item>
-        <item>seven</item>
-    </string-array>
-
     <string name="grid_category_title">Columns and rows</string>
     <string name="number_of_columns_title">Grid columns</string>
     <string name="number_of_rows_title">Grid rows</string>
@@ -416,8 +400,16 @@
 
     <string name="action_edit">Edit</string>
 
+
     <string name="pref_override_icon_shape_dark_bg_title">Use dark shape</string>
     <string name="pref_override_icon_shape_dark_bg_summary">Use a dark background color for icons without their own shape color</string>
 
     <string name="smartspace_hours_mins">%1$s %2$s</string>
+
+    <!-- Homescreen double tap gesture -->
+    <string name="pref_homescreen_dt_gestures_title">Double tap gesture</string>
+    <string name="pref_homescreen_dt_gestures_summary">Select the action of the double tap gesture on the homescreen</string>
+    <string name="pref_homescreen_dt_gestures_none">None</string>
+    <string name="pref_homescreen_dt_gestures_sleep">Sleep</string>
+    <string name="pref_homescreen_dt_gestures_torch">Flashlight</string>
 </resources>
