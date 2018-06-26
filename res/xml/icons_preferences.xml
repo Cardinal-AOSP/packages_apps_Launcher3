@@ -16,8 +16,7 @@
     <Preference
         android:persistent="true"
         android:key="icon-packs"
-        android:title="@string/icons_pack_name"
-        android:icon="@drawable/icon_pack"/>
+        android:title="@string/icons_pack_name"/>
 
     <ListPreference
         android:key="pref_override_icon_shape"
