@@ -326,7 +326,9 @@ public class AllAppsTransitionController implements TouchController, SwipeDetect
                             Action.Direction.UP,
                             containerType);
                 }
-                mLauncher.showAppsView(true /* animated */, false /* updatePredictedApps */);
+                mLauncher.showAppsView(true /* animated */,
+                        false /* updatePredictedApps */,
+                        false /* focusSearchBar */);
                 if (hasSpringAnimationHandler()) {
                     mSpringAnimationHandler.add(mSearchSpring, true /* setDefaultValues */);
                     // The icons are moving upwards, so we go to 0 from 1. (y-axis 1 is below 0.)
@@ -349,7 +351,9 @@ public class AllAppsTransitionController implements TouchController, SwipeDetect
                             Action.Direction.UP,
                             containerType);
                 }
-                mLauncher.showAppsView(true, /* animated */ false /* updatePredictedApps */);
+                mLauncher.showAppsView(true, /* animated */
+                        false /* updatePredictedApps */,
+                        false /* focusSearchBar */);
             }
         }
     }
