@@ -3992,8 +3992,8 @@ public class Launcher extends BaseActivity
 
         final int popupWidth = getResources().getDimensionPixelSize(R.dimen.edit_dialog_min_width);
         Pair<List<String>, List<String>> iconPacks = mIconsHandler.getAllIconPacks();
-        ListPopupWindow listPopupWindow = new ListPopupWindow(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
-        listPopupWindow.setAdapter(new ArrayAdapter(new ContextThemeWrapper(this, R.style.AlertDialogCustom),
+        ListPopupWindow listPopupWindow = new ListPopupWindow(new ContextThemeWrapper(this, R.style.EditIconStyle));
+        listPopupWindow.setAdapter(new ArrayAdapter(new ContextThemeWrapper(this, R.style.EditIconDialogStyle),
                 R.layout.edit_dialog_item, iconPacks.second));
         listPopupWindow.setWidth(popupWidth);
         listPopupWindow.setAnchorView(mPackageIcon);
@@ -4012,7 +4012,7 @@ public class Launcher extends BaseActivity
             }
         });
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom))
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.EditIconDialogStyle))
                 .setView(mIconPackView)
                 .setTitle(getString(R.string.edit_app))
                 .setOnDismissListener(new DialogInterface.OnDismissListener() {

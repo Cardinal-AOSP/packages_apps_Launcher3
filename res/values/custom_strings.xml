@@ -22,6 +22,7 @@
     <string name="default_iconpack_title">Default</string>
     <string name="icons_pack_name">Icon pack</string>
     <string name="edit_drop_target_label">Edit</string>
+    <string name="edit_hint">Icon name</string>
     <string name="edit_app">Edit</string>
     <string name="reset_icon">Reset</string>
     <string name="customize">Customize</string>
