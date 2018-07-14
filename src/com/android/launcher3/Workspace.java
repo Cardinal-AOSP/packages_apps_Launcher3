@@ -45,6 +45,7 @@ import android.os.IBinder;
 import android.os.Parcelable;
 import android.os.PowerManager;
 import android.os.UserHandle;
+import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -101,6 +102,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import static android.content.Context.VIBRATOR_SERVICE;
 import static com.android.launcher3.Utilities.getDevicePrefs;
 
 /**
@@ -333,6 +335,9 @@ public class Workspace extends PagedView
 
     private int mGestureMode;
 
+    // Used to give haptic feedback to the user
+    private Vibrator mVibrator;
+
     /**
      * Used to inflate the Workspace from XML.
      *
@@ -372,6 +377,8 @@ public class Workspace extends PagedView
         // Disable multitouch across the workspace/all apps/customize tray
         setMotionEventSplittingEnabled(true);
 
+        mVibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
+
         mGestureMode = Integer.valueOf(getDevicePrefs(getContext()).getString("pref_homescreen_dt_gestures", "1"));
 
         mGestureListener =
@@ -391,9 +398,11 @@ public class Workspace extends PagedView
             case 1:
                 PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
                 pm.goToSleep(event.getEventTime());
+                mVibrator.vibrate(15);
                 break;
             case 2:
                 flashLight();
+                mVibrator.vibrate(15);
                 break;
         }
     }
