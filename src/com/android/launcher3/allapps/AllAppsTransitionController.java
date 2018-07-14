@@ -38,6 +38,8 @@ import com.android.launcher3.util.TouchController;
 
 import java.lang.reflect.InvocationTargetException;
 
+import static com.android.launcher3.Utilities.getDevicePrefs;
+
 /**
  * Handles AllApps view transition.
  * 1) Slides all apps view using direct manipulation
@@ -120,7 +122,9 @@ public class AllAppsTransitionController implements TouchController, SwipeDetect
     }
     private NotificationState mNotificationState;
 
-    public AllAppsTransitionController(Launcher l) {
+    private int mGestureMode;
+
+    public AllAppsTransitionController(Launcher l, Context context) {
         mLauncher = l;
         mDetector = new SwipeDetector(l, this, SwipeDetector.VERTICAL);
         mShiftRange = DEFAULT_SHIFT_RANGE;
@@ -129,6 +133,8 @@ public class AllAppsTransitionController implements TouchController, SwipeDetect
         mEvaluator = new ArgbEvaluator();
         mAllAppsBackgroundColor = Themes.getAttrColor(l, android.R.attr.colorPrimary);
         mIsDarkTheme = Themes.getAttrBoolean(mLauncher, R.attr.isMainColorDark);
+
+        mGestureMode = Integer.valueOf(getDevicePrefs(context).getString("pref_homescreen_notification_gestures", "1"));
     }
 
     @Override
@@ -224,9 +230,14 @@ public class AllAppsTransitionController implements TouchController, SwipeDetect
                 //Disable code when access to the hidden APIs returns an error
                 if (velocity > NOTIFICATION_OPEN_VELOCITY &&
                         (mNotificationState == NotificationState.Free || mNotificationState == NotificationState.Closed)) {
-                    mNotificationState = openNotifications() ?
-                            NotificationState.Opened :
-                            NotificationState.Locked;
+                    setGestures(mGestureMode);
+                    if (mGestureMode == 1) {
+                        mNotificationState = openNotifications() ?
+                                NotificationState.Opened :
+                                NotificationState.Locked;
+                    } else {
+                        mNotificationState = NotificationState.Locked;
+                    }
                 } else if (velocity < NOTIFICATION_CLOSE_VELOCITY &&
                         mNotificationState == NotificationState.Opened) {
                     mNotificationState = closeNotifications() ?
@@ -270,6 +281,29 @@ public class AllAppsTransitionController implements TouchController, SwipeDetect
             return true;
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
             return false;
+        }
+    }
+
+    @SuppressLint({"WrongConstant", "PrivateApi"})
+    private void expandNotificationPanel() {
+        try {
+            Class.forName("android.app.StatusBarManager")
+                    .getMethod("expandSettingsPanel")
+                    .invoke(mLauncher.getSystemService("statusbar"));
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+        }
+    }
+
+    public void setGestures(int mode) {
+        switch(mode) {
+            case 0:
+                break;
+            case 1:
+                openNotifications();
+                break;
+            case 2:
+                expandNotificationPanel();
+                break;
         }
     }
 

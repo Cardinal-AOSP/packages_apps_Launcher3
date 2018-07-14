@@ -16,6 +16,7 @@ import com.android.launcher3.LauncherExterns;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.Workspace;
+import com.android.launcher3.allapps.AllAppsTransitionController;
 import com.android.launcher3.dynamicui.WallpaperColorInfo;
 import com.android.launcher3.graphics.DrawableFactory;
 import com.android.launcher3.util.ComponentKeyMapper;
@@ -54,10 +55,12 @@ public class NexusLauncher {
     class NexusLauncherCallbacks implements LauncherCallbacks, SharedPreferences.OnSharedPreferenceChangeListener, WallpaperColorInfo.OnChangeListener {
         private SmartspaceView mSmartspace;
         private Workspace mWorkspace;
+        private AllAppsTransitionController mAllAppsTransitionController;
         private final FeedReconnector mFeedReconnector = new FeedReconnector();
 
         private static final String KEY_SHOW_WEATHER_CLOCK = "pref_show_clock_weather";
         private static final String KEY_HOMESCREEN_DT_GESTURES = "pref_homescreen_dt_gestures";
+        private static final String KEY_HOMESCREEN_NOTIFICATIONS_GESTURES = "pref_homescreen_notification_gestures";
 
         private ItemInfoUpdateReceiver getUpdateReceiver() {
             if (mItemInfoUpdateReceiver == null) {
@@ -300,6 +303,10 @@ public class NexusLauncher {
 
             if (KEY_HOMESCREEN_DT_GESTURES.equals(key)) {
                 mWorkspace.setGestures(Integer.valueOf(sharedPreferences.getString("KEY_HOMESCREEN_DT_GESTURES", "1")));
+            }
+
+            if (KEY_HOMESCREEN_NOTIFICATIONS_GESTURES.equals(key)) {
+                mAllAppsTransitionController.setGestures(Integer.valueOf(sharedPreferences.getString("KEY_HOMESCREEN_NOTIFICATIONS_GESTURES", "0")));
             }
         }
 

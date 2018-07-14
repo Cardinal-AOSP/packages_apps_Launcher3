@@ -66,4 +66,17 @@
         <item>@string/pref_homescreen_dt_gestures_torch</item>
     </string-array>
 
+    <!-- Homescreen notification gestures -->
+    <string-array translatable="false" name="pref_homescreen_notification_gestures_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="pref_homescreen_notification_gestures_names">
+        <item>@string/pref_homescreen_notification_gestures_none</item>
+        <item>@string/pref_homescreen_notification_gestures_notifications</item>
+        <item>@string/pref_homescreen_notification_gestures_panel</item>
+    </string-array>
+
 </resources>

@@ -443,7 +443,7 @@ public class Launcher extends BaseActivity
         mAccessibilityDelegate = new LauncherAccessibilityDelegate(this);
 
         mDragController = new DragController(this);
-        mAllAppsController = new AllAppsTransitionController(this);
+        mAllAppsController = new AllAppsTransitionController(this, getApplicationContext());
         mStateTransitionAnimation = new LauncherStateTransitionAnimation(this, mAllAppsController);
 
         mAppWidgetManager = AppWidgetManagerCompat.getInstance(this);

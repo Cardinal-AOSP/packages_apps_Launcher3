@@ -86,6 +86,15 @@
             android:defaultValue=""
             android:persistent="false" />
 
+        <ListPreference
+            android:key="pref_homescreen_notification_gestures"
+            android:title="@string/pref_homescreen_notification_gestures_title"
+            android:summary="@string/pref_homescreen_notification_gestures_summary"
+            android:entries="@array/pref_homescreen_notification_gestures_names"
+            android:entryValues="@array/pref_homescreen_notification_gestures_values"
+            android:defaultValue=""
+            android:persistent="false" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
