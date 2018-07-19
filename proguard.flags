@@ -112,15 +112,15 @@
 }
 
 -keep class com.google.android.apps.nexuslauncher.CustomIconProvider {
-  *;
+  public <init>(...);
 }
 
 -keep class com.google.android.apps.nexuslauncher.CustomDrawableFactory {
-  *;
+  public <init>(...);
 }
 
 -keep class com.google.android.apps.nexuslauncher.CustomAppPredictor {
-  *;
+  public <init>(...);
 }
 
 -keep class com.android.launcher3.graphics.FixedScaleDrawable {
