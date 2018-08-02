@@ -64,7 +64,6 @@
     <color name="qsb_dark_icon_tint">#ff757575</color>
 
     <!-- Fastscroller -->
-    <color name="fastscroller_thumb_text_color">@android:color/black</color>
     <color name="fastscroller_thumb_background_color">@*android:color/accent_device_default_light</color>
 
 </resources>
