@@ -382,8 +382,10 @@ public class Launcher extends BaseActivity
         }
 
         @Override
-        public void onSettingChanged(int keySettingInt) {
-            mSystemTheme = keySettingInt;
+        public void onSettingChanged() {
+            mWorkspace.setHaptic(getSettingInt("haptic_feedback_enabled") == 1);
+
+            mSystemTheme = getSettingInt("system_ui_theme");
             onThemeChanged();
         }
     }
@@ -417,7 +419,7 @@ public class Launcher extends BaseActivity
 
         mSettingsObserver = new SystemThemeObserver(this.getContentResolver());
         mSettingsObserver.register("system_ui_theme");
-        mSystemTheme = mSettingsObserver.getSettingInt();
+        mSystemTheme = mSettingsObserver.getSettingInt("system_ui_theme");
         boolean forceDark = mSystemTheme == 2;
         boolean forceLight = mSystemTheme == 1;
         overrideTheme(wallpaperColorInfo.isDark(), wallpaperColorInfo.supportsDarkText(), forceDark, forceLight);
@@ -463,6 +465,10 @@ public class Launcher extends BaseActivity
         mLauncherView = LayoutInflater.from(this).inflate(R.layout.launcher, null);
 
         setupViews();
+
+        mSettingsObserver.register("haptic_feedback_enabled");
+        mWorkspace.setHaptic(mSettingsObserver.getSettingInt("haptic_feedback_enabled") == 1);
+
         mDeviceProfile.layout(this, false /* notifyListeners */);
         loadExtractedColorsAndColorItems();
 

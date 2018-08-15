@@ -338,6 +338,8 @@ public class Workspace extends PagedView
     // Used to give haptic feedback to the user
     private Vibrator mVibrator;
 
+    private boolean mHaptic;
+
     /**
      * Used to inflate the Workspace from XML.
      *
@@ -398,13 +400,21 @@ public class Workspace extends PagedView
             case 1:
                 PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
                 pm.goToSleep(event.getEventTime());
-                mVibrator.vibrate(15);
+                if (mHaptic) {
+                    mVibrator.vibrate(15);
+                }
                 break;
             case 2:
                 flashLight();
-                mVibrator.vibrate(15);
+                if (mHaptic) {
+                    mVibrator.vibrate(15);
+                }
                 break;
         }
+    }
+
+    public void setHaptic(boolean enabled) {
+        mHaptic = enabled;
     }
 
     public void setGestures(int mode) {

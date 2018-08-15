@@ -29,12 +29,11 @@ public interface CustomSettingsObserver {
      */
     void register(String keySetting, String ... dependentSettings);
     void unregister();
-    void onSettingChanged(int keySettingInt);
+    void onSettingChanged();
 
     abstract class System extends ContentObserver implements CustomSettingsObserver {
         private ContentResolver mResolver;
-        private String mKeySetting;
-
+ 
         public System(ContentResolver resolver) {
             super(new Handler());
             mResolver = resolver;
@@ -42,9 +41,8 @@ public interface CustomSettingsObserver {
 
         @Override
         public void register(String keySetting, String ... dependentSettings) {
-            mKeySetting = keySetting;
             mResolver.registerContentObserver(
-                    Settings.System.getUriFor(mKeySetting), false, this);
+                    Settings.System.getUriFor(keySetting), false, this);
             for (String setting : dependentSettings) {
                 mResolver.registerContentObserver(
                         Settings.System.getUriFor(setting), false, this);
@@ -59,11 +57,11 @@ public interface CustomSettingsObserver {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            onSettingChanged(Settings.System.getInt(mResolver, mKeySetting, 0));
+            onSettingChanged();
         }
 
-        public int getSettingInt() {
-            return Settings.System.getInt(mResolver, mKeySetting, 0);
+        public int getSettingInt(String keySetting) {
+            return Settings.System.getInt(mResolver, keySetting, 0);
         }
     }
 }
