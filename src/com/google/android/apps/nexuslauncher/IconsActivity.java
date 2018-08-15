@@ -193,7 +193,7 @@ public class IconsActivity extends com.android.launcher3.SettingsActivity implem
                 }
             }
             mIconPack.setSummary(packageLabel);
-            mIconPack.setIcon(packageIcon);
+            //mIconPack.setIcon(packageIcon);
         }
 
         @Override
